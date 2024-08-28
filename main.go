@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"io/fs"
 	"os"
 	"strconv"
@@ -18,27 +17,13 @@ func load() int {
 	}
 	defer file.Close()
 
-	// TODO: No total... correctly
-	buf := make([]byte, 10)
-	for {
-		n, err := file.Read(buf)
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		if n > 0 {
-			fmt.Println(string(buf[:n]))
-		}
+	buf := make([]byte, 1024)
+	n, err := file.Read(buf)
+	total, err := strconv.Atoi(string(buf[:n]))
+	if err != nil {
+		fmt.Println("Converting Error %v", err)
 	}
-	fmt.Println(buf)
-	// var a byte
-	// binary.Read(bytes.NewReader(buf), binary.BigEndian, &a)
-	// total := int(a)
-	// fmt.Printf("Total : %v \n", total)
-	return 0
+	return total
 }
 
 func main() {
@@ -58,7 +43,6 @@ func main() {
 
 		switch strings.TrimSuffix(command, "\n") {
 		case "1":
-			// TODO: refactoring
 			keepGoing := true
 			for keepGoing {
 				fmt.Println("How much do you want to add?")
@@ -101,7 +85,6 @@ func main() {
 			fmt.Println("Nothing in the list")
 		}
 	}
-
 	fmt.Println("Thank you")
 }
 
