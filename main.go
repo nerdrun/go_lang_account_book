@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+type Item struct {
+	name   string
+	amount int
+}
+
 func load() int {
 	fmt.Println("Opening a file")
 	file, err := os.OpenFile("./total.txt", os.O_APPEND|os.O_CREATE, os.ModePerm)
@@ -23,6 +28,15 @@ func load() int {
 	if err != nil {
 		fmt.Println("Converting Error %v", err)
 	}
+	file2, err := os.OpenFile("./test.txt", os.O_APPEND|os.O_CREATE, os.ModePerm)
+
+	buf2 := make([]byte, 1024)
+
+	for {
+		n2, _ := file2.Read(buf2)
+		fmt.Println(string(buf[:n2]))
+	}
+
 	return total
 }
 
@@ -38,6 +52,8 @@ func prompt(total int) {
 
 	switch opt {
 	case "1":
+		s := fmt.Sprintf("Item%6d", 30)
+		fmt.Println(s)
 		input, _ := getInput("Your input: ", reader)
 		added, _ := strconv.Atoi(input)
 		total += added
