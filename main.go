@@ -32,10 +32,9 @@ func load() int {
 
 	buf2 := make([]byte, 1024)
 
-	for {
-		n2, _ := file2.Read(buf2)
-		fmt.Println(string(buf[:n2]))
-	}
+	n2, err := file2.Read(buf2)
+	fmt.Printf("n2 : %d\n", n2)
+	fmt.Println(string(buf2[:n2]))
 
 	return total
 }
