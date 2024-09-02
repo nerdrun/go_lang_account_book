@@ -18,21 +18,21 @@ func load() int {
 	fmt.Println("Opening a file")
 	file, err := os.OpenFile("./total.txt", os.O_APPEND|os.O_CREATE, os.ModePerm)
 	if err != nil {
-		fmt.Println("Opening file error : %v", err)
+		fmt.Printf("Opening file error : %v\n", err)
 	}
 	defer file.Close()
 
 	buf := make([]byte, 1024)
-	n, err := file.Read(buf)
+	n, _ := file.Read(buf)
 	total, err := strconv.Atoi(string(buf[:n]))
 	if err != nil {
-		fmt.Println("Converting Error %v", err)
+		fmt.Printf("Converting Error %v\n", err)
 	}
-	file2, err := os.OpenFile("./test.txt", os.O_APPEND|os.O_CREATE, os.ModePerm)
+	file2, _ := os.OpenFile("./test.txt", os.O_APPEND|os.O_CREATE, os.ModePerm)
 
 	buf2 := make([]byte, 1024)
 
-	n2, err := file2.Read(buf2)
+	n2, _ := file2.Read(buf2)
 	fmt.Printf("n2 : %d\n", n2)
 	fmt.Println(string(buf2[:n2]))
 
