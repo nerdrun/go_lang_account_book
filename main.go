@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io/fs"
 	"os"
 	"strconv"
 	"strings"
@@ -14,7 +13,7 @@ type Item struct {
 	amount int
 }
 
-func load() int {
+func load() []Item {
 	fmt.Println("Opening a file")
 	file, err := os.OpenFile("./total.txt", os.O_APPEND|os.O_CREATE, os.ModePerm)
 	if err != nil {
@@ -24,19 +23,15 @@ func load() int {
 
 	buf := make([]byte, 1024)
 	n, _ := file.Read(buf)
-	total, err := strconv.Atoi(string(buf[:n]))
-	if err != nil {
-		fmt.Printf("Converting Error %v\n", err)
+	itemSlices := strings.Fields(string(buf[:n]))
+
+	var items []Item
+	for i := 0; i < len(itemSlices); i += 2 {
+		amount, _ := strconv.Atoi(itemSlices[i+1])
+		items = append(items, Item{name: itemSlices[i], amount: amount})
 	}
-	file2, _ := os.OpenFile("./test.txt", os.O_APPEND|os.O_CREATE, os.ModePerm)
 
-	buf2 := make([]byte, 1024)
-
-	n2, _ := file2.Read(buf2)
-	fmt.Printf("n2 : %d\n", n2)
-	fmt.Println(string(buf2[:n2]))
-
-	return total
+	return items
 }
 
 func getInput(prompt string, r *bufio.Reader) (string, error) {
@@ -45,7 +40,9 @@ func getInput(prompt string, r *bufio.Reader) (string, error) {
 	return strings.TrimSpace(input), err
 }
 
-func prompt(total int) {
+func prompt(items []Item) {
+	fmt.Println(items[0].name)
+	fmt.Println(items[0].amount)
 	reader := bufio.NewReader(os.Stdin)
 	opt, _ := getInput("Choose option (1 - Input, 2 - Output, 3 - Save, 4 - Exit): ", reader)
 
@@ -53,28 +50,28 @@ func prompt(total int) {
 	case "1":
 		s := fmt.Sprintf("Item%6d", 30)
 		fmt.Println(s)
-		input, _ := getInput("Your input: ", reader)
-		added, _ := strconv.Atoi(input)
-		total += added
-		fmt.Printf("Total : %d\n", total)
-		prompt(total)
+		// input, _ := getInput("Your input: ", reader)
+		// added, _ := strconv.Atoi(input)
+		// items += added
+		fmt.Printf("Total : %d\n", items)
+		prompt(items)
 	case "2":
-		output, _ := getInput("Your output : ", reader)
-		subtracted, _ := strconv.Atoi(output)
-		total -= subtracted
-		fmt.Printf("Total : %d\n", total)
-		prompt(total)
+		// output, _ := getInput("Your output : ", reader)
+		// subtracted, _ := strconv.Atoi(output)
+		// items -= subtracted
+		fmt.Printf("Total : %d\n", items)
+		prompt(items)
 	case "3":
-		err := os.WriteFile("./total.txt", []byte(strconv.Itoa(total)), fs.ModePerm)
-		if err != nil {
-			fmt.Printf("Writing file failed : %v", err)
-		}
+		// err := os.WriteFile("./total.txt", []byte(strconv.Itoa(items)), fs.ModePerm)
+		// if err != nil {
+		// 	fmt.Printf("Writing file failed : %v", err)
+		// }
 		fmt.Println("Your file is saved successfully.")
 	case "4":
 		fmt.Println("Thank you")
 	default:
 		fmt.Println("Nothing in the list")
-		prompt(total)
+		prompt(items)
 	}
 }
 
