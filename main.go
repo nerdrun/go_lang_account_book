@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 )
 
 type Item struct {
-	name   string
-	amount int
+	Name   string
+	Amount int
 }
 
 func load() []Item {
@@ -28,7 +29,7 @@ func load() []Item {
 	var items []Item
 	for i := 0; i < len(itemSlices); i += 2 {
 		amount, _ := strconv.Atoi(itemSlices[i+1])
-		items = append(items, Item{name: itemSlices[i], amount: amount})
+		items = append(items, Item{Name: itemSlices[i], Amount: amount})
 	}
 
 	return items
@@ -40,10 +41,28 @@ func getInput(prompt string, r *bufio.Reader) (string, error) {
 	return strings.TrimSpace(input), err
 }
 
+func displayItems(items []Item) {
+	fmt.Println("Your account list")
+	for index, item := range items {
+		fmt.Printf("%d) %s%10d\n", index, item.Name, item.Amount)
+	}
+}
+
+func loadFiles() {
+	entries, _ := os.ReadDir("./")
+	index := 1
+	for _, entry := range entries {
+		extension := path.Ext(entry.Name())
+		if extension == ".accbook" {
+			fmt.Printf("%d) %s\n", index, entry.Name())
+			index++
+		}
+	}
+}
+
 func prompt(items []Item) {
-	fmt.Println(items[0].name)
-	fmt.Println(items[0].amount)
 	reader := bufio.NewReader(os.Stdin)
+	displayItems(items)
 	opt, _ := getInput("Choose option (1 - Input, 2 - Output, 3 - Save, 4 - Exit): ", reader)
 
 	switch opt {
@@ -77,5 +96,6 @@ func prompt(items []Item) {
 
 func main() {
 	fmt.Println("Welcome, this is an account book in terminal")
+	loadFiles()
 	prompt(load())
 }
