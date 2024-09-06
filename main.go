@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+// 1. File option prompt - new file, load file, delete file [O]
+// 2. Display files [O]
+// 3. A default format
+
 type Item struct {
 	Name   string
 	Amount int
@@ -50,13 +54,46 @@ func displayItems(items []Item) {
 
 func loadFiles() {
 	entries, _ := os.ReadDir("./")
-	index := 1
+	index := 0
 	for _, entry := range entries {
 		extension := path.Ext(entry.Name())
 		if extension == ".accbook" {
-			fmt.Printf("%d) %s\n", index, entry.Name())
 			index++
+			fmt.Printf("%d) %s\n", index, entry.Name())
 		}
+	}
+	if index == 0 {
+		fmt.Println("Please create a file first")
+		fileOptionPrompt()
+	}
+}
+
+func readFile() {
+}
+
+func writeFile() {
+}
+
+func deleteFile() {
+
+}
+
+func fileOptionPrompt() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Choose option")
+	fmt.Println("l - Load a file")
+	fmt.Println("c - Create a file")
+	fmt.Println("d - Delete a file")
+	opt, _ := getInput("---> ", reader)
+	switch opt {
+	case "l":
+		loadFiles()
+	case "c":
+		writeFile()
+	case "d":
+		deleteFile()
+	default:
+		fileOptionPrompt()
 	}
 }
 
@@ -96,6 +133,7 @@ func prompt(items []Item) {
 
 func main() {
 	fmt.Println("Welcome, this is an account book in terminal")
-	loadFiles()
-	prompt(load())
+	fileOptionPrompt()
+	// loadFiles()
+	// prompt(load())
 }
