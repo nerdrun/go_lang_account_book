@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io/fs"
 	"os"
 	"path"
 	"strconv"
@@ -16,6 +17,10 @@ import (
 type Item struct {
 	Name   string
 	Amount int
+}
+
+type Category struct {
+	Good int `json:"Good"`
 }
 
 func load() []Item {
@@ -52,30 +57,62 @@ func displayItems(items []Item) {
 	}
 }
 
-func loadFiles() {
+func getFiles() *[]fs.DirEntry {
 	entries, _ := os.ReadDir("./")
-	index := 0
+	var accbooks []fs.DirEntry
 	for _, entry := range entries {
 		extension := path.Ext(entry.Name())
 		if extension == ".accbook" {
-			index++
-			fmt.Printf("%d) %s\n", index, entry.Name())
+			accbooks = append(accbooks, entry)
 		}
 	}
-	if index == 0 {
+	if len(accbooks) == 0 {
 		fmt.Println("Please create a file first")
 		fileOptionPrompt()
 	}
+
+	for index, acc := range accbooks {
+		fmt.Printf("%d) %s\n", index, acc.Name())
+	}
+
+	return &accbooks
 }
 
-func readFile() {
+func selectFile(files *[]fs.DirEntry, r *bufio.Reader) int {
+	opt, _ := getInput("Please select a file: ", r)
+	index, err := strconv.Atoi(opt)
+	if err != nil {
+		fmt.Println("Please enter only digit")
+		return selectFile(files, r)
+	}
+	if index > len(*files) || index < 0 {
+		fmt.Println("Please select a correct file number")
+		return selectFile(files, r)
+	}
+	return index
 }
 
-func writeFile() {
+func loadFile(file *fs.DirEntry) {
+	f, err := os.OpenFile((*file).Name(), os.O_APPEND|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		fmt.Printf("Opening file error : %v\n", err)
+	}
+	defer f.Close()
+
+	buf := make([]byte, 1024)
+	n, _ := f.Read(buf)
+	// var data Category
+	// if err := json.Unmarshal(buf, &data); err != nil {
+	// 	panic(err)
+	// }
+	fmt.Println(string(buf[:n]))
+	// fmt.Println(data)
+}
+
+func createFile() {
 }
 
 func deleteFile() {
-
 }
 
 func fileOptionPrompt() {
@@ -87,9 +124,12 @@ func fileOptionPrompt() {
 	opt, _ := getInput("---> ", reader)
 	switch opt {
 	case "l":
-		loadFiles()
+		files := getFiles()
+		index := selectFile(files, reader)
+		file := (*files)[index]
+		loadFile(&file)
 	case "c":
-		writeFile()
+		createFile()
 	case "d":
 		deleteFile()
 	default:
