@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
@@ -101,11 +102,18 @@ func loadFile(file *fs.DirEntry) {
 
 	buf := make([]byte, 1024)
 	n, _ := f.Read(buf)
-	// var data Category
+	var data Category
 	// if err := json.Unmarshal(buf, &data); err != nil {
 	// 	panic(err)
 	// }
-	fmt.Println(string(buf[:n]))
+	fmt.Println("comparison")
+	fmt.Println(buf)
+	fmt.Println(buf[:n])
+	err = json.Unmarshal(buf[:n], &data)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(data)
 	// fmt.Println(data)
 }
 
