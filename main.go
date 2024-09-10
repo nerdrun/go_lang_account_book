@@ -2,18 +2,11 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
-	"io/fs"
 	"os"
-	"path"
 	"strconv"
 	"strings"
 )
-
-// 1. File option prompt - new file, load file, delete file [O]
-// 2. Display files [O]
-// 3. A default format
 
 type Item struct {
 	Name   string
@@ -58,71 +51,6 @@ func displayItems(items []Item) {
 	}
 }
 
-func getFiles() *[]fs.DirEntry {
-	entries, _ := os.ReadDir("./")
-	var accbooks []fs.DirEntry
-	for _, entry := range entries {
-		extension := path.Ext(entry.Name())
-		if extension == ".accbook" {
-			accbooks = append(accbooks, entry)
-		}
-	}
-	if len(accbooks) == 0 {
-		fmt.Println("Please create a file first")
-		fileOptionPrompt()
-	}
-
-	for index, acc := range accbooks {
-		fmt.Printf("%d) %s\n", index, acc.Name())
-	}
-
-	return &accbooks
-}
-
-func selectFile(files *[]fs.DirEntry, r *bufio.Reader) int {
-	opt, _ := getInput("Please select a file: ", r)
-	index, err := strconv.Atoi(opt)
-	if err != nil {
-		fmt.Println("Please enter only digit")
-		return selectFile(files, r)
-	}
-	if index > len(*files) || index < 0 {
-		fmt.Println("Please select a correct file number")
-		return selectFile(files, r)
-	}
-	return index
-}
-
-func loadFile(file *fs.DirEntry) {
-	f, err := os.OpenFile((*file).Name(), os.O_APPEND|os.O_CREATE, os.ModePerm)
-	if err != nil {
-		fmt.Printf("Opening file error : %v\n", err)
-	}
-	defer f.Close()
-
-	buf := make([]byte, 1024)
-	n, _ := f.Read(buf)
-	var data Category
-	// if err := json.Unmarshal(buf, &data); err != nil {
-	// 	panic(err)
-	// }
-	fmt.Println("comparison")
-	fmt.Println(buf)
-	fmt.Println(buf[:n])
-	err = json.Unmarshal(buf[:n], &data)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(data)
-	// fmt.Println(data)
-}
-
-func createFile() {
-}
-
-func deleteFile() {
-}
-
 func fileOptionPrompt() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Choose option")
@@ -132,10 +60,14 @@ func fileOptionPrompt() {
 	opt, _ := getInput("---> ", reader)
 	switch opt {
 	case "l":
-		files := getFiles()
+		files, err := lookupFolder()
+		if err != nil {
+			fmt.Println(err)
+			fileOptionPrompt()
+		}
 		index := selectFile(files, reader)
-		file := (*files)[index]
-		loadFile(&file)
+		selectedFile := (*files)[index]
+		loadFile(selectedFile.Name())
 	case "c":
 		createFile()
 	case "d":
