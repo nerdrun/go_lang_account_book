@@ -1,0 +1,18 @@
+{
+  "wages": [
+    "salary",
+    "tips",
+    "bonus",
+    "commission",
+    "miscellaneous"
+  ],
+  "other": [
+    "transferredFromSavings",
+    "interestIncome",
+    "dividends",
+    "gifts",
+    "refunds",
+    "installments",
+    "balance"
+  ]
+}
