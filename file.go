@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 
@@ -25,7 +27,23 @@ func FileOptionPrompt() {
 		}
 		index := selectFile(files, reader)
 		selectedFile := (*files)[index]
-		services.LoadFile(selectedFile.Name())
+		f, err := services.LoadFile(selectedFile.Name())
+		if err != nil {
+			panic(err)
+		}
+		buf, err := io.ReadAll(f)
+
+		if err != nil {
+			panic(err)
+		}
+
+		var account services.Account
+		err = json.Unmarshal(buf, &account)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(account.Input.Income.Bonus.Name)
+		fmt.Println(account.Input.Income.Bonus.Value)
 	case "c":
 		createFile(reader)
 	case "d":
