@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"reflect"
 
 	services "account.com/test/services"
 )
@@ -55,6 +56,12 @@ func FileOptionPrompt() {
 }
 
 func displayItems(opt string, account *services.Account) {
+	v := reflect.ValueOf(*account)
+	types := v.Type()
+	fmt.Println(v.NumField())
+	for i := 0; i < v.NumField(); i++ {
+		fmt.Println(types.Field(i).Name)
+	}
 	switch opt {
 	case "1":
 		fmt.Println("Show Input")
