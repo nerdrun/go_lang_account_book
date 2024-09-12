@@ -42,15 +42,33 @@ func FileOptionPrompt() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(account.Input.Income.Bonus.Name)
-		fmt.Println(account.Input.Income.Bonus.Value)
+		opt := selectMenu(reader)
+		displayItems(opt, &account)
 	case "c":
 		createFile(reader)
+		FileOptionPrompt()
 	case "d":
 		services.DeleteFile()
 	default:
 		FileOptionPrompt()
 	}
+}
+
+func displayItems(opt string, account *services.Account) {
+	switch opt {
+	case "1":
+		fmt.Println("Show Input")
+	case "2":
+		fmt.Println("Show Output")
+	}
+}
+
+func selectMenu(r *bufio.Reader) string {
+	fmt.Println("What do you want to see?")
+	fmt.Println("1) input")
+	fmt.Println("2) output")
+	opt, _ := GetInput(": ", r)
+	return opt
 }
 
 func selectFile(files *[]fs.DirEntry, r *bufio.Reader) int {
