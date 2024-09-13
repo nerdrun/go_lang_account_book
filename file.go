@@ -7,7 +7,6 @@ import (
 	"io"
 	"io/fs"
 	"os"
-	"reflect"
 
 	services "account.com/test/services"
 )
@@ -55,15 +54,24 @@ func FileOptionPrompt() {
 	}
 }
 
+func displayInput(input *services.Input) {
+	income := &input.Income
+	fmt.Println("Your Input")
+	fmt.Println("Income")
+	fmt.Printf("%s : %-6.2f\n", income.Salary.Name, income.Salary.Value)
+	fmt.Printf("%s : %-6.2f\n", income.Tip.Name, income.Tip.Value)
+	fmt.Printf("%s : %-6.2f\n", income.Bonus.Name, income.Bonus.Value)
+	fmt.Printf("%s : %-6.2f\n", income.Commission.Name, income.Commission.Value)
+	fmt.Printf("%s : %-6.2f\n", income.Other.Name, income.Other.Value)
+}
+
 func displayItems(opt string, account *services.Account) {
-	v := reflect.ValueOf(*account)
-	types := v.Type()
-	fmt.Println(v.NumField())
-	for i := 0; i < v.NumField(); i++ {
-		fmt.Println(types.Field(i).Name)
-	}
+
+	// output := account.Output
+
 	switch opt {
 	case "1":
+		displayInput(&account.Input)
 		fmt.Println("Show Input")
 	case "2":
 		fmt.Println("Show Output")
