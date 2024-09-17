@@ -58,11 +58,11 @@ func displayInput(input *services.Input) {
 	income := &input.Income
 	fmt.Println("Your Input")
 	fmt.Println("Income")
-	fmt.Printf("%s : %-6.2f\n", income.Salary.Name, income.Salary.Value)
-	fmt.Printf("%s : %-6.2f\n", income.Tip.Name, income.Tip.Value)
-	fmt.Printf("%s : %-6.2f\n", income.Bonus.Name, income.Bonus.Value)
-	fmt.Printf("%s : %-6.2f\n", income.Commission.Name, income.Commission.Value)
-	fmt.Printf("%s : %-6.2f\n", income.Other.Name, income.Other.Value)
+	fmt.Printf("1) %-25s%.2f\n", income.Salary.Name+":", income.Salary.Value)
+	fmt.Printf("2) %-25s%.2f\n", income.Tip.Name+":", income.Tip.Value)
+	fmt.Printf("3) %-25s%.2f\n", income.Bonus.Name+":", income.Bonus.Value)
+	fmt.Printf("4) %-25s%.2f\n", income.Commission.Name+":", income.Commission.Value)
+	fmt.Printf("5) %-25s%.2f\n", income.Other.Name+":", income.Other.Value)
 }
 
 func displayItems(opt string, account *services.Account) {
@@ -72,7 +72,7 @@ func displayItems(opt string, account *services.Account) {
 	switch opt {
 	case "1":
 		displayInput(&account.Input)
-		fmt.Println("Show Input")
+		displayItems(opt, account)
 	case "2":
 		fmt.Println("Show Output")
 	}
