@@ -7,7 +7,9 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"strings"
 
+	domains "account.com/test/domains"
 	services "account.com/test/services"
 )
 
@@ -37,7 +39,7 @@ func FileOptionPrompt() {
 			panic(err)
 		}
 
-		var account services.Account
+		var account domains.Account
 		err = json.Unmarshal(buf, &account)
 		if err != nil {
 			panic(err)
@@ -54,25 +56,42 @@ func FileOptionPrompt() {
 	}
 }
 
-func displayInput(input *services.Input) {
-	income := &input.Income
-	fmt.Println("Your Input")
-	fmt.Println("Income")
-	fmt.Printf("1) %-25s%.2f\n", income.Salary.Name+":", income.Salary.Value)
-	fmt.Printf("2) %-25s%.2f\n", income.Tip.Name+":", income.Tip.Value)
-	fmt.Printf("3) %-25s%.2f\n", income.Bonus.Name+":", income.Bonus.Value)
-	fmt.Printf("4) %-25s%.2f\n", income.Commission.Name+":", income.Commission.Value)
-	fmt.Printf("5) %-25s%.2f\n", income.Other.Name+":", income.Other.Value)
+func itemFormat(name string, value float32) {
+	fmt.Printf("%-25s%.2f\n", name+":", value)
 }
 
-func displayItems(opt string, account *services.Account) {
+func displayInputItems(input *domains.Input) {
+	income := &input.Income
+	fmt.Printf("Your Input\n\n")
+	fmt.Printf("Income %s\n", strings.Repeat("=", 22))
+	itemFormat(income.Salary.Name, income.Salary.Value)
+	itemFormat(income.Tip.Name, income.Tip.Value)
+	itemFormat(income.Bonus.Name, income.Bonus.Value)
+	itemFormat(income.Commission.Name, income.Commission.Value)
+	itemFormat(income.Other.Name, income.Other.Value)
 
+	fmt.Println()
+	other := &input.Other
+	fmt.Printf("Other %s\n", strings.Repeat("=", 23))
+	itemFormat(other.Transferred.Name, other.Transferred.Value)
+	itemFormat(other.Interest.Name, other.Interest.Value)
+	itemFormat(other.Dividend.Name, other.Dividend.Value)
+	itemFormat(other.Gift.Name, other.Gift.Value)
+	itemFormat(other.Refund.Name, other.Refund.Value)
+	itemFormat(other.Installment.Name, other.Installment.Value)
+	itemFormat(other.Balance.Name, other.Balance.Value)
+}
+
+func displayOutputItems(output *domains.Output) {
+	fmt.Println("Your Output")
+	fmt.Println("Outcome")
+}
+
+func displayItems(opt string, account *domains.Account) {
 	// output := account.Output
-
 	switch opt {
 	case "1":
-		displayInput(&account.Input)
-		displayItems(opt, account)
+		displayInputItems(&account.Input)
 	case "2":
 		fmt.Println("Show Output")
 	}
