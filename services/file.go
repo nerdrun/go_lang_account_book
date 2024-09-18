@@ -8,6 +8,8 @@ import (
 	"os"
 	"path"
 	"strconv"
+
+	domains "account.com/test/domains"
 )
 
 func LookupFolder() (*[]fs.DirEntry, error) {
@@ -64,7 +66,7 @@ func CreateFile(opt string, r *bufio.Reader) error {
 	if err == nil {
 		return fmt.Errorf("the file already exists")
 	}
-	account := generateAccount()
+	account := domains.GenerateAccount()
 
 	buf, err := json.Marshal(account)
 

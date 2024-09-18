@@ -183,7 +183,7 @@ type Utility struct {
 	Other         Item
 }
 
-func generateAccount() Account {
+func GenerateAccount() Account {
 	input := generateInput()
 	output := generateOutput()
 	return Account{
