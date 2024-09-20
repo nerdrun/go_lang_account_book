@@ -84,7 +84,7 @@ func displayInputItems(input *domains.Input) {
 }
 
 func displayOutputItems(output *domains.Output) {
-	fmt.Println("Your Output\n\n")
+	fmt.Print("Your Output\n\n")
 
 	children := output.Children
 	fmt.Printf("Children %s\n", strings.Repeat("=", 20))

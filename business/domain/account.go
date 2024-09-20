@@ -1,5 +1,22 @@
 package services
 
+/// Category - type Income, Outcome
+/// Group - id a group for items
+/// Item - id and name and value
+
+type Category struct {
+	string
+}
+
+IncomeLlL  := Category{"INCOME"}
+OutcomeLL := Category{"Outcome"}
+
+type Group struct {
+	ID       string
+	Items    []map[string]float32
+	Category Category
+}
+
 type Account struct {
 	Input  Input
 	Output Output
