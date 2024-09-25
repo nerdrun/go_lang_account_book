@@ -9,7 +9,8 @@ import (
 	"os"
 	"strings"
 
-	domains "account.com/test/domains"
+	domains "account.com/test/business/domain"
+	pkg "account.com/test/pkg"
 	services "account.com/test/services"
 )
 
@@ -19,7 +20,7 @@ func FileOptionPrompt() {
 	fmt.Println("l - Load a file")
 	fmt.Println("c - Create a file")
 	fmt.Println("d - Delete a file")
-	opt, _ := GetInput("---> ", reader)
+	opt, _ := pkg.GetInput("---> ", reader)
 	switch opt {
 	case "l":
 		files, err := services.LookupFolder()
@@ -247,12 +248,12 @@ func selectMenu(r *bufio.Reader) string {
 	fmt.Println("What do you want to see?")
 	fmt.Println("1) input")
 	fmt.Println("2) output")
-	opt, _ := GetInput(": ", r)
+	opt, _ := pkg.GetInput(": ", r)
 	return opt
 }
 
 func selectFile(files *[]fs.DirEntry, r *bufio.Reader) int {
-	opt, _ := GetInput("Please select a file: ", r)
+	opt, _ := pkg.GetInput("Please select a file: ", r)
 	index, err := services.SelectFile(opt, files, r)
 	if err != nil {
 		fmt.Println(err)
@@ -262,7 +263,7 @@ func selectFile(files *[]fs.DirEntry, r *bufio.Reader) int {
 }
 
 func createFile(r *bufio.Reader) {
-	opt, _ := GetInput("Please type a file name you want to create : ", r)
+	opt, _ := pkg.GetInput("Please type a file name you want to create : ", r)
 	err := services.CreateFile(opt, r)
 	if err != nil {
 		fmt.Println(err)

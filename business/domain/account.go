@@ -1,20 +1,13 @@
-package services
+package domain
 
 /// Category - type Income, Outcome
 /// Group - id a group for items
 /// Item - id and name and value
 
-type Category struct {
-	string
-}
-
-IncomeLlL  := Category{"INCOME"}
-OutcomeLL := Category{"Outcome"}
-
 type Group struct {
-	ID       string
+	ID       uint32
 	Items    []map[string]float32
-	Category Category
+	Category string
 }
 
 type Account struct {

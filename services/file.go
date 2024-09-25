@@ -9,7 +9,7 @@ import (
 	"path"
 	"strconv"
 
-	domains "account.com/test/domains"
+	domains "account.com/test/business/domain"
 )
 
 func LookupFolder() (*[]fs.DirEntry, error) {

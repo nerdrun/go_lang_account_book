@@ -4,22 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
+
+	pkg "account.com/test/pkg"
 )
-
-type Category struct {
-	Good int `json:"Good"`
-}
-
-func GetInput(prompt string, r *bufio.Reader) (string, error) {
-	fmt.Print(prompt)
-	input, err := r.ReadString('\n')
-	return strings.TrimSpace(input), err
-}
 
 func prompt() {
 	reader := bufio.NewReader(os.Stdin)
-	opt, _ := GetInput("Choose option (1 - Input, 2 - Output, 3 - Save, 4 - Exit): ", reader)
+	opt, _ := pkg.GetInput("Choose option (1 - Input, 2 - Output, 3 - Save, 4 - Exit): ", reader)
 
 	switch opt {
 	case "1":
@@ -39,9 +30,16 @@ func prompt() {
 	}
 }
 
+func displayWelcome() {
+	fmt.Println("Welcome ACB, this is a terminal-UI accounting book")
+}
+
 func main() {
-	fmt.Println("Welcome, this is an account book in terminal")
-	FileOptionPrompt()
+	displayWelcome()
+
+	buffer := bufio.NewReader(os.Stdin)
+	pkg.GetInput("yo", buffer)
+	// FileOptionPrompt()
 	// loadFiles()
 	// prompt(load())
 }
